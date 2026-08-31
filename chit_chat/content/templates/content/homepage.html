@@ -1,0 +1,14 @@
+{% extends 'content/base.html' %}
+{% block title %}
+Home Page
+{% endblock %}
+
+{% block main %}
+{% for room in rooms %}
+<div class="message">
+
+	<strong>{{room.id}}</strong>
+	<p>{{room.name}}</p>
+</div>
+{% endfor %}
+{% endblock %}

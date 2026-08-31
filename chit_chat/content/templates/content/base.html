@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>
+		{% block title %}
+
+		{% endblock %}
+	</title>
+	<link rel="stylesheet" href="{% static 'content/style.css' %}">
+</head>
+
+<body>
+
+	<div class="container">
+
+		<header>
+			<h1>Home Page</h1>
+
+
+			{% if user.is_authenticated %}
+			<form method="post" action="{% url 'logout' %}">
+				{% csrf_token %}
+				<button style="margin: 5px">logout</button>
+			</form>
+
+			{% else %}
+
+			{% if request.path != "/signup/" %}
+			<a href="{% url 'signup' %}">
+				<button style="margin: 5px">Sign up</button>
+			</a>
+			{% else %}
+			{% endif %}
+
+
+
+			{% if request.path != "/login/" %}
+			<a href="{% url 'login' %}">
+				<button style="margin: 5px">Log in</button>
+			</a>
+
+			{% else %}
+			{% endif %}
+			{% endif %}
+
+
+
+
+		</header>
+
+		<main class="messages">
+			{% block main %}
+
+			{% endblock %}
+		</main>
+	</div>
+
+</body>
+
+</html>
