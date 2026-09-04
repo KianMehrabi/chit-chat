@@ -4,11 +4,20 @@ Home Page
 {% endblock %}
 
 {% block main %}
-{% for room in rooms %}
+<script>
+	async function getRooms() {
+		fetch("http://127.0.0.1:8000/api/rooms/")
+			.then(response => response.json())
+			.then(data => {
+				console.log(data);
+			});
+	}
+	getRooms()
+</script>
 <div class="message">
-
-	<strong>{{room.id}}</strong>
-	<p>{{room.name}}</p>
+	hello
 </div>
-{% endfor %}
+<button onclick="getRooms()">
+	hello
+</button>
 {% endblock %}

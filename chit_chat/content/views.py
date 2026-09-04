@@ -8,9 +8,7 @@ from django.contrib.auth import logout , login , authenticate
 
 def home_page(request):
     rooms = Room.objects.filter(user__username = request.user.username )
-    return render(request , "content/homepage.html" , {
-        "rooms": rooms
-    })
+    return render(request , "content/homepage.html" )
 
 def log_out(request):
     if request.method == "POST":
