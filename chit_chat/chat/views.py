@@ -14,7 +14,5 @@ def login_page(self):
 
 def logout_page(request):
     if request.method == "POST":
-        print(request)
         return redirect("homepage")
-    else:
-        pass
+

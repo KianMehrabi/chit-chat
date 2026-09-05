@@ -7,11 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id" , "username" , "password"]
-        
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = "__all__"
+
 
 
 class RoomSerializer(serializers.ModelSerializer):
@@ -19,20 +15,3 @@ class RoomSerializer(serializers.ModelSerializer):
         model = Room
         fields = "__all__"
 
-
-class MembershipSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Membership
-        fields = "__all__"
-
-
-class MessageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Message
-        fields = "__all__"
-
-
-class PhotoMessageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PhotoMessage
-        fields = "__all__"

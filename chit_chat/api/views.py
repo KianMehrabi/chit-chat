@@ -1,46 +1,32 @@
-from django.shortcuts import redirect
-from rest_framework import viewsets , permissions
+from rest_framework import viewsets 
 from django.contrib.auth.models import User
-from rest_framework.views import Response
-from chat.models import Profile, Room, Membership, Message, PhotoMessage
+from django.contrib.auth import authenticate, login
+from chat.models import Room  
 from .serializer import (
-    ProfileSerializer,
-    UserSerializer,
     RoomSerializer,
-    MembershipSerializer, 
-    MessageSerializer,
-    PhotoMessageSerializer,
+    UserSerializer,
 )
+
+"""
+
+the reason the login in works: request is just an Attribute of the instance class of UserViewSet and its same as django normal request
+so i can access it from self , it beautiful and saves a full search of DB
+
+"""
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [ permissions.AllowAny]
+    
+    def perform_create(self, serializer):
+        user = serializer.save()
+        print(user.password)
+        created_user = authenticate(self.request , username = user.username , password = user.password)
+        login(self.request, user)
 
-class ProfileViewSet(viewsets.ModelViewSet):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
 
-
+        
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
-
-
-class MembershipViewSet(viewsets.ModelViewSet):
-    queryset = Membership.objects.all()
-    serializer_class = MembershipSerializer
-
-
-class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.all()
-    serializer_class = MessageSerializer
-
-
-class PhotoMessageViewSet(viewsets.ModelViewSet):
-    queryset = PhotoMessage.objects.all()
-    serializer_class = PhotoMessageSerializer
-
-
-
 
