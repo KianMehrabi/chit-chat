@@ -25,7 +25,6 @@ class Room(models.Model):
     title = models.TextField(max_length = 26 , default = "chat")
     user = models.ManyToManyField(User , through="Membership")
     description = models.TextField(max_length = 250 , default = "")
-    number_joined = models.IntegerField(default=0)
 
     def __str__(self):
         return f'|{self.id}|'

@@ -4,20 +4,28 @@ Home Page
 {% endblock %}
 
 {% block main %}
+<div id="rooms">
+
+</div>
+
 <script>
 	async function getRooms() {
-		fetch("http://127.0.0.1:8000/api/rooms/")
-			.then(response => response.json())
-			.then(data => {
-				console.log(data);
-			});
+		const response = await fetch("http://127.0.0.1:8000/api/rooms/");
+		const rooms = await response.json();
+
+		const div = document.getElementById("rooms");
+
+		rooms.forEach(room => {
+			const roomElement = document.createElement("div");
+
+			roomElement.textContent = room.name;
+
+			div.appendChild(roomElement);
+		});
 	}
-	getRooms()
+
+	getRooms();
 </script>
-<div class="message">
-	hello
-</div>
-<button onclick="getRooms()">
-	hello
-</button>
+
+
 {% endblock %}
