@@ -1,88 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'chat/base.html' %}
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>My Homepage</title>
-	<style>
-		:root {
-			--bg: #0f172a;
-			--surface: #1e293b;
-			--accent: #38bdf8;
-			--text: #f1f5f9;
-			--muted: #94a3b8;
-		}
+{% block title %}
+Home page
+{% endblock%}
+{% block main %}
+{% if user.is_authenticated %}
+<div class="container">
 
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
+	<div class="card">
+		<p class="title">Sign up</p>
+		<a href="{% url 'signup' %}">
+			<button class="btn btn-primary">Click</button>
+		</a>
+	</div>
 
-		body {
-			min-height: 100vh;
-			display: flex;
-			flex-direction: column;
-			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-			background: var(--bg);
-			color: var(--text);
-		}
+	<div class="card">
+		<p class="title">Login</p>
+		<a href="{% url 'login' %}">
+			<button class="btn btn-primary">Click</button>
+		</a>
+	</div>
 
-		header {
-			padding: 1.5rem 2rem;
-			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-		}
+	<div class="card">
+		<p class="title">Hello world</p>
+	</div>
 
-		header h1 {
-			font-size: 1.25rem;
-			font-weight: 600;
-			letter-spacing: 0.02em;
-		}
 
-		header h1 span {
-			color: var(--accent);
-		}
 
-		main {
-			flex: 1;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			text-align: center;
-			padding: 2rem;
-		}
+</div>
+{% else %}
+<div class="container">
 
-		.hero h2 {
-			font-size: clamp(2.5rem, 6vw, 4.5rem);
-			font-weight: 700;
-			background: linear-gradient(135deg, var(--text), var(--accent));
-			-webkit-background-clip: text;
-			background-clip: text;
-			color: transparent;
-		}
+	<div class="card">
+		<p class="title">User</p>
 
-		.hero p {
-			margin-top: 0.75rem;
-			color: var(--muted);
-			font-size: 1.1rem;
-		}
-	</style>
-</head>
+		<span class="badge badge-success">Authenticated</span>
+	</div>
 
-<body>
+</div>
+{% endif %}
 
-	<header>
-		<h1>My<span>ChitChat</span></h1>
-	</header>
 
-	<main>
-		<div class="hero">
-			<h2>Hello, World</h2>
-			<p>A minimal start to something bigger.</p>
-		</div>
-	</main>
-
-</body>
-
-</html>
+{% endblock %}

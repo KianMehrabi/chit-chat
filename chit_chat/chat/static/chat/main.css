@@ -1,0 +1,199 @@
+  :root {
+    --bg: #0b1220;
+    --surface: #1a2436;
+    --primary: #38bdf8;
+    --danger: #f87171;
+    --success: #4ade80;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --border: rgba(255, 255, 255, 0.08);
+    --radius: 10px;
+  }
+ 
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+ 
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 2rem;
+  }
+ 
+  /* ---------- Layout ---------- */
+ 
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+ 
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    transition: border-color 0.2s ease;
+  }
+ 
+  .card:hover {
+    border-color: rgba(56, 189, 248, 0.25);
+  }
+ 
+  /* ---------- Text ---------- */
+ 
+  .title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.01em;
+  }
+ 
+  .subtitle {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+ 
+  .text {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+ 
+  .text-muted {
+    color: var(--muted);
+  }
+ 
+  /* ---------- Buttons ---------- */
+ 
+  .btn {
+    display: inline-block;
+    padding: 0.65rem 1.3rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+  }
+ 
+  .btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+  }
+ 
+  .btn:active {
+    transform: translateY(0);
+  }
+ 
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary), #6366f1);
+    color: #0b1220;
+    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.25);
+  }
+ 
+  .btn-danger {
+    background: var(--danger);
+    color: #0b1220;
+  }
+ 
+  .btn-success {
+    background: var(--success);
+    color: #0b1220;
+  }
+ 
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+ 
+  /* ---------- Badges ---------- */
+ 
+  .badge {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+ 
+  .badge-success {
+    background: rgba(74, 222, 128, 0.15);
+    color: var(--success);
+  }
+ 
+  .badge-danger {
+    background: rgba(248, 113, 113, 0.15);
+    color: var(--danger);
+  }
+ 
+  /* ---------- Table ---------- */
+ 
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+ 
+  th, td {
+    text-align: left;
+    padding: 0.8rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+ 
+  th {
+    color: var(--muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+ 
+  /* ---------- Form ---------- */
+ 
+  .field {
+    margin-bottom: 1.25rem;
+  }
+ 
+  .field label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 0.45rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+ 
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+ 
+  .field textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+ 
+  .field input:focus,
+  .field textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+  }
+ 
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: rgba(148, 163, 184, 0.5);
+  }

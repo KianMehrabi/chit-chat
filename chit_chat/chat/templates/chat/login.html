@@ -6,10 +6,65 @@ Login Page
 {% block main %}
 
 <script>
+
+	function getCookie(name) {
+		const value = `; ${document.cookie}`;
+		const parts = value.split(`; ${name}=`);
+		if (parts.length === 2) return parts.pop().split(';').shift();
+	}
+	async function sendData(event) {
+		event.preventDefault();
+
+		const name = document.querySelector('input[name="name"]').value;
+		const password = document.querySelector('input[name="password"]').value;
+		const csrfToken = getCookie("csrftoken");
+
+
+		try {
+			const response = await fetch("{% url 'loginApi' %}", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"X-CSRFToken": csrfToken
+				},
+				body: JSON.stringify({
+					name: name,
+					password: password
+				})
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error: ${response.status}`);
+			}
+
+
+			console.log(response);
+
+		} catch (error) {
+			console.error("Request failed:", error);
+		}
+	}
 </script>
 
-<div class="messages">
-	this is the login page
-</div>
+<div class="container">
 
+	<div class="card">
+		<p class="title">Log in Form</p>
+
+		<form onsubmit="sendData(event)">
+			<div class="field">
+				<label>Name</label>
+				<input name="name" type="text" placeholder="Your name">
+			</div>
+
+			<div class="field">
+				<label>Password</label>
+				<input name="password" type="password" placeholder="Your password">
+			</div>
+
+			<button class="btn btn-primary" type="submit">Submit</button>
+		</form>
+	</div>
+
+</div>
 {% endblock %}
