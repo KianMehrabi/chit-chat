@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>
+		{% block title %}
+
+		{% endblock %}
+	</title>
+	<link rel="stylesheet" href="{% static 'chat/style.css' %}">
+</head>
+
+
+
+<body>
+	<div class="container">
+
+		<header>
+			<h1>Website</h1>
+
+			<main class="messages">
+				{% block main %}
+
+				{% endblock %}
+			</main>
+		</header>
+	</div>
+</body>
+
+</html>

@@ -40,14 +40,6 @@ from django.contrib.auth.models import User
         
         created_user  = User.objects.filter(username= "mike_one").first()
         self.assertEqual(created_user.password , "mike_admin_500")
-
-
-
-
-
-
-
-
 """
 
 class InterconnectionChatSystem(TestCase):
