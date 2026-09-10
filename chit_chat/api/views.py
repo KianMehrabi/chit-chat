@@ -1,6 +1,7 @@
 from rest_framework import viewsets 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from rest_framework.views import APIView
 from chat.models import Room  
 from .serializer import (
     RoomSerializer,
@@ -25,7 +26,6 @@ class UserViewSet(viewsets.ModelViewSet):
         login(self.request, user)
 
 
-        
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
