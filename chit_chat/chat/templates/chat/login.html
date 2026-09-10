@@ -15,6 +15,7 @@ Login Page
 	async function sendData(event) {
 		event.preventDefault();
 
+		const message = document.getElementById("message");
 		const name = document.querySelector('input[name="name"]').value;
 		const password = document.querySelector('input[name="password"]').value;
 		const csrfToken = getCookie("csrftoken");
@@ -34,11 +35,14 @@ Login Page
 			});
 
 			if (!response.ok) {
-				throw new Error(`HTTP error: ${response.status}`);
+				message.innerHTML = "<span class='badge badge-danger badge-shake'>please try again</span>";
+			} else {
+				setTimeout(() => {
+					window.location.href = "{% url 'homepage' %}";
+				}, 1000);
 			}
 
 
-			console.log(response);
 
 		} catch (error) {
 			console.error("Request failed:", error);
@@ -62,8 +66,14 @@ Login Page
 				<input name="password" type="password" placeholder="Your password">
 			</div>
 
+			<div class="field" id="message">
+
+
+			</div>
+
 			<button class="btn btn-primary" type="submit">Submit</button>
 		</form>
+
 	</div>
 
 </div>

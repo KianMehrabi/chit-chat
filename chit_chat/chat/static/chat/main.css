@@ -90,11 +90,14 @@
     transform: translateY(0);
   }
  
+   
   .btn-primary {
-    background: linear-gradient(135deg, var(--primary), #6366f1);
+    background: var(--primary);
     color: #0b1220;
     box-shadow: 0 4px 14px rgba(56, 189, 248, 0.25);
   }
+ 
+
  
   .btn-danger {
     background: var(--danger);
@@ -197,3 +200,14 @@
   .field textarea::placeholder {
     color: rgba(148, 163, 184, 0.5);
   }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+.badge-shake {
+  animation: shake 0.4s ease-in-out;
+}

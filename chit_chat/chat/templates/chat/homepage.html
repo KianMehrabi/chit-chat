@@ -4,9 +4,7 @@
 Home page
 {% endblock%}
 {% block main %}
-{% if user.is_authenticated %}
 <div class="container">
-
 	<div class="card">
 		<p class="title">Sign up</p>
 		<a href="{% url 'signup' %}">
@@ -24,21 +22,5 @@ Home page
 	<div class="card">
 		<p class="title">Hello world</p>
 	</div>
-
-
-
 </div>
-{% else %}
-<div class="container">
-
-	<div class="card">
-		<p class="title">User</p>
-
-		<span class="badge badge-success">Authenticated</span>
-	</div>
-
-</div>
-{% endif %}
-
-
 {% endblock %}

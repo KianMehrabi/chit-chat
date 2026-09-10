@@ -1,0 +1,41 @@
+{% extends 'chat/base.html' %}
+
+{% block title %}
+Home page
+{% endblock%}
+
+{% block main %}
+<script>
+
+	async function requestLogOut() {
+		fetch("{% url 'logoutApi' %}")
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error: ${response.status}`);
+				} else {
+					const message = document.getElementById("message");
+					message.innerHTML = "<span class='badge badge-success badge-shake'>success</span>";
+					setTimeout(() => {
+						window.location.href = "{% url 'homepage' %}";
+					}, 1000);
+				}
+			})
+	}
+
+
+</script>
+<div class="container">
+	<div class="card">
+		<p class="title">User</p>
+
+		<span class="badge badge-success">Authenticated</span>
+	</div>
+
+	<div class="card">
+		<div id="message">
+		</div>
+		<p class="title">Logout</p>
+		<button onclick="requestLogOut()" class="btn btn-primary">Click</button>
+	</div>
+</div>
+{% endblock %}

@@ -1,18 +1,22 @@
+from django.contrib.auth.views import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 # Create your views here.
 
 def home_page(request):
-    return render(request , "chat/homepage.html")
+    if not request.user.is_authenticated:
+        return render(request , "chat/homepage.html")
+    else:
+        return render(request , "chat/authhomepage.html")
 
 def sign_page(self):
+    if self.request.user.is_authenticated:
+        return HttpResponse(status=403)
     return render(self , "chat/signup.html")
 
 def login_page(self):
+    if self.user.is_authenticated:
+        return HttpResponse(status=403)
     return render(self , "chat/login.html")
-
-def logout_page(request):
-    if request.method == "POST":
-        return redirect("homepage")
 
