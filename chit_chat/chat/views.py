@@ -5,7 +5,6 @@ from django.shortcuts import redirect, render
 # Create your views here.
 
 def home_page(request):
-    print(request.user)
     if not request.user.is_authenticated:
         return render(request , "chat/homepage.html")
     else:

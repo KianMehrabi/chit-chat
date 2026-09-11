@@ -38,7 +38,7 @@ class Room(models.Model):
 
 class Membership(models.Model):
     room = models.ForeignKey(Room , on_delete=models.CASCADE , null =True)
-    user = models.ForeignKey(User , on_delete=models.CASCADE , null = True , related_name="user")
+    user = models.ForeignKey(User , on_delete=models.CASCADE , null = True)
 
     is_owner = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
