@@ -37,6 +37,8 @@ Login Page
 			if (!response.ok) {
 				message.innerHTML = "<span class='badge badge-danger badge-shake'>please try again</span>";
 			} else {
+
+				message.innerHTML = "<span class='badge badge-success badge-shake'>success</span>";
 				setTimeout(() => {
 					window.location.href = "{% url 'homepage' %}";
 				}, 1000);

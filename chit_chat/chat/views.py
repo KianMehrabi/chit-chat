@@ -10,13 +10,13 @@ def home_page(request):
     else:
         return render(request , "chat/authhomepage.html")
 
-def sign_page(self):
-    if self.request.user.is_authenticated:
+def sign_page(request):
+    if request.user.is_authenticated:
         return HttpResponse(status=403)
-    return render(self , "chat/signup.html")
+    return render(request , "chat/signup.html")
 
-def login_page(self):
-    if self.user.is_authenticated:
+def login_page(request):
+    if request.user.is_authenticated:
         return HttpResponse(status=403)
-    return render(self , "chat/login.html")
+    return render(request , "chat/login.html")
 

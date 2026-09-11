@@ -11,11 +11,22 @@ from .serializer import (
 )
 
 """
-
 the reason the logic works: request is just an Attribute of the instance class of UserViewSet and its same as django normal request
 so i can access it from self , it beautiful and saves a full search of DB
-
 """
+
+class SignupApi(APIView):
+    permission_classes = [AllowAny]
+    def post(self , request):
+        try:
+            user = User(username = request.data['name'], password = request.data['password'])
+            user.save()
+            login(request, user)
+            return Response(status = status.HTTP_200_OK)
+        except:
+            return Response({"error":"cant create user because user was created before"} ,status=status.HTTP_400_BAD_REQUEST)
+
+
 class LogoutApi(APIView):
     permission_classes = [IsAuthenticated]
     def get(self , request):
