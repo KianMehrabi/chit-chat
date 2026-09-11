@@ -19,6 +19,9 @@ class SignupApi(APIView):
     permission_classes = [AllowAny]
     def post(self , request):
         try:
+            is_user = User.objects.filter(password = request.data['password'])
+            if len(is_user) > 1:
+                return Response({"error":"there many users with the same name"} , status = status.HTTP_400_BAD_REQUEST)
             user = User(username = request.data['name'], password = request.data['password'])
             user.save()
             login(request, user)
@@ -38,12 +41,19 @@ class LoginApi(APIView):
     permission_classes = [AllowAny]
     def post(self , request):
         data = request.data
-        user = get_object_or_404(User , password= data['password'])
-        if user.username == data['name']:
-            login(request , user)
-            return Response(status=status.HTTP_200_OK)
+        user = User.objects.filter(username = data['name'])
+
+        if len(user) > 1:
+            return Response({"error":"there is more than one user with one password"}, status=status.HTTP_400_BAD_REQUEST)
+        elif user is None:
+            return Response({"error":"user was not found" } ,status =status.HTTP_404_NOT_FOUND)
+
+
+        if user.first().password != data['password']:
+            return Response({"error":"password didnt match" } ,status =status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"error":"user name is not correct"} , status=status.HTTP_400_BAD_REQUEST)
+            login(request , user.first())
+            return Response(status=status.HTTP_200_OK)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -52,7 +62,6 @@ class UserViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         user = serializer.save()
-        print(user.password)
         created_user = authenticate(self.request , username = user.username , password = user.password)
         login(self.request, user)
 
