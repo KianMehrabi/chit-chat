@@ -35,6 +35,7 @@ Login Page
 			});
 
 			if (!response.ok) {
+				console.log(response.status)
 				message.innerHTML = "<span class='badge badge-danger badge-shake'>please try again</span>";
 			} else {
 

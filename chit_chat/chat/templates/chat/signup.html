@@ -36,8 +36,7 @@ sign Page
 
 			if (!response.ok) {
 
-				const data = await response.json();
-				console.log(data.error)
+				console.log(response.status)
 				message.innerHTML = "<span class='badge badge-danger badge-shake'>please try again</span>";
 			} else {
 				message.innerHTML = "<span class='badge badge-success badge-shake'>success</span>";
