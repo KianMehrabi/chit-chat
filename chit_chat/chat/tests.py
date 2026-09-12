@@ -42,3 +42,22 @@ from django.contrib.auth.models import User
         self.assertEqual(created_user.password , "mike_admin_500")
 """
 
+class RoomModelTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="user1" , password="password134")
+        self.room = Room.objects.create(title="chat one" , description="this is chat one")
+
+    def test_membership_from_user(self):
+        membership = Membership.objects.create(user= self.user , room= self.room)
+        user_membership = self.user.membership_set.filter(room = self.room)
+        self.assertEqual(user_membership.exists() , True )
+
+    def test_membership_from_room(self):
+        membership = Membership.objects.create(user= self.user , room= self.room)
+        room_membership = self.room.membership_set.filter(user = self.user)
+        self.assertEqual(room_membership.exists() , True )
+
+    def test_room_user_existing_after_creating_membership(self):
+        membership = Membership.objects.create(user= self.user , room= self.room)
+        user_in_room = self.room.user.all().first()
+        self.assertEqual(user_in_room.username , self.user.username)

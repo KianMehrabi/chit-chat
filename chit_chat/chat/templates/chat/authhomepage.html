@@ -63,16 +63,15 @@ Home page
 	}
 
 
-	async function roomJoin() {
+	async function roomJoin(room_code) {
 		// change this later
-		const room_code = 0
 		const csrfToken = getCookie("csrftoken");
 
 		// this a trick to make use dynamic DTS but with js So i shouldnt change every varialbe in production code 
 		// if you want to cut the code to a frontend framework or .js file you should be alerted that this code is not 
 		// going to get compiled.
 		let url = "{% url 'room-detail' pk=1001 %}"
-		url = url.replace(1001, room_id)
+		url = url.replace(1001, room_code)
 		const response = await fetch(url, {
 			method: "PATCH",
 			headers: {
@@ -148,8 +147,8 @@ Home page
 				// Get this user's membership for this room
 				const m_data = await getMemberDetail(room.id);
 
-				let url_room = `{% url 'room-detail-page' pk=1001 %}`
-				url_room = url_room.replace(1001, room.id)
+				let url_room = `{% url 'roomJoinApi' pk=1001 %}`
+				url_room = url_room.replace(1001, room.code)
 				if (m_data && m_data.is_admin) {
 
 					element.innerHTML += `

@@ -19,17 +19,18 @@ class RoomViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return user.room_set.all()
 
-    def partial_update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        print(f"\n \n {instance} \n \n")
+class RoomJoinApi(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self , request , pk):
         data = request.data
+        room = Room.objects.filter(code = pk).first()
 
         if data['join']:
-            Membership.objects.create(user = request.user , room = instance)
-            return Response({"message":"was successful"} , status=status.HTTP_200_OK)
+            Membership.objects.create(user = self.request.user , room = room)
+            return Response({"message":"user was added"} , status=status.HTTP_200_OK)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
+            Membership.objects.filter(user = self.request.user , room__code = pk).delete()
+            return Response({"message":"user was deleted"} , status=status.HTTP_200_OK)
 
 class SignupApi(APIView):
 
