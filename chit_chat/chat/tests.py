@@ -42,30 +42,3 @@ from django.contrib.auth.models import User
         self.assertEqual(created_user.password , "mike_admin_500")
 """
 
-class InterconnectionChatSystem(TestCase):
-    def setUp(self):
-        user_one = User(username = "mike1" , password = "mike55555old1")
-        user_two = User(username = "mike2" , password = "mike55555old2")
-        user_three = User(username = "mike3" , password = "mike55555old3")
-
-        user_one.save()
-        user_two.save()
-        user_three.save()
-
-        
-        room = Room(
-            title = "cp programmers",
-            description = "i like to be a very succesfull person", 
-        )
-        room.save()
-        room.user.add(user_one , user_two , user_three)
-        room.save()
-
-        # i save 2 times because i overwrite the save method so changes the number_joined if not save it after the add ; number_joined would be 0
-
-    def test_number_of_people_joined_on_room(self):
-        room = Room.objects.get(title ="cp programmers")
-        number = room.user.all().count()
-        self.assertEqual(room.number_joined , number)
-
-

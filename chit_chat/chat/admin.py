@@ -3,4 +3,8 @@ from .models import Room, Message , Membership
 
 # Register your models here.
 
-admin.site.register([Room, Message , Membership])
+admin.site.register([Message , Membership])
+
+@admin.register(Room)
+class RoomAdmin(admin.ModelAdmin):
+    readonly_fields = ("code",)

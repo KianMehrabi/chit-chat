@@ -1,4 +1,7 @@
+from enum import unique
+
 from django.db import models
+import random
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 # Create your models here.
@@ -22,6 +25,14 @@ class Profile(models.Model):
 
 
 class Room(models.Model):
+    def generate_code(self):
+        while True:
+            random_number = random.randint(0, 100_000_000 - 1)
+            code = f"{random_number:08d}"
+            if not Room.objects.filter(code = code).exists():
+                return code
+
+    code = models.CharField(max_length = 100 , default = "" , unique= True)
     title = models.TextField(max_length = 26 , default = "chat")
     user = models.ManyToManyField(User , through="Membership")
     description = models.TextField(max_length = 250 , default = "")
@@ -29,12 +40,13 @@ class Room(models.Model):
     def __str__(self):
         return f'|{self.id}|'
 
+
     def save(self , *args , **kwargs):
-        if self.id != None:
-            self.number_joined = self.user.all().count()
-        else:
-            pass
+        if not self.code:
+            self.code = self.generate_code()
         super(Room , self).save(*args , **kwargs)
+
+
 
 class Membership(models.Model):
     room = models.ForeignKey(Room , on_delete=models.CASCADE , null =True)

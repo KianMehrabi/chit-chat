@@ -7,11 +7,6 @@ Home page
 {% block main %}
 
 <div class="container">
-	<div class="card">
-		<p class="title">{{ user.username }}</p>
-
-		<span class="badge badge-success">Authenticated</span>
-	</div>
 
 	<div class="card">
 		<div id="message">
@@ -20,6 +15,38 @@ Home page
 		<button onclick="requestLogOut()" class="btn btn-primary">Click</button>
 	</div>
 
+	<div class="card">
+		<p class="title">Create Room</p>
+
+		<form onsubmit="roomJoin()">
+			<div class="field">
+				<label>Title</label>
+				<input name="title" type="text" placeholder="Your title">
+			</div>
+
+			<div class="field">
+				<label>Description</label>
+				<input name="description" type="text" placeholder="Your description">
+			</div>
+
+			<button class="btn btn-primary" type="submit">Submit</button>
+		</form>
+
+	</div>
+
+	<div class="card">
+		<p class="title">Join Room</p>
+
+		<div class="field">
+			<form>
+
+				<label>Tag</label>
+				<input name="tag" type="text" placeholder="enter room tag">
+				<button class="btn btn-primary" style="margin:10px">Submit</button>
+			</form>
+		</div>
+
+	</div>
 	<div id="hello">
 
 	</div>
@@ -28,6 +55,38 @@ Home page
 
 
 <script>
+	// gets csrf token
+	function getCookie(name) {
+		const value = `; ${document.cookie}`;
+		const parts = value.split(`; ${name}=`);
+		if (parts.length === 2) return parts.pop().split(';').shift();
+	}
+
+
+	async function roomJoin() {
+		// change this later
+		const room_code = 0
+		const csrfToken = getCookie("csrftoken");
+
+		// this a trick to make use dynamic DTS but with js So i shouldnt change every varialbe in production code 
+		// if you want to cut the code to a frontend framework or .js file you should be alerted that this code is not 
+		// going to get compiled.
+		let url = "{% url 'room-detail' pk=1001 %}"
+		url = url.replace(1001, room_id)
+		const response = await fetch(url, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+				"X-CSRFToken": csrfToken
+			},
+			body: JSON.stringify({
+				"join": true,
+				"room_code": room_code
+			})
+		});
+	}
+
+
 	async function getMemberDetail(id) {
 		try {
 			let url = "{% url 'membership-detail' room=2002 %}";
@@ -89,17 +148,18 @@ Home page
 				// Get this user's membership for this room
 				const m_data = await getMemberDetail(room.id);
 
-				console.log(m_data);
-
+				let url_room = `{% url 'room-detail-page' pk=1001 %}`
+				url_room = url_room.replace(1001, room.id)
 				if (m_data && m_data.is_admin) {
 
 					element.innerHTML += `
                         <div class="card">
-                            <p class="title">${room.title}</p>
-                            <small>${room.description}</small>
-                            <button class="btn btn-primary">See Chat</button>
-                            <button class ="btn btn-success">edit</button>
-                            <button class ="btn btn-danger">delete</button>
+                        	<p class="title">${room.title}</p>
+				<a href=${url_room}>
+                        		<button class="btn btn-primary">See Chat</button>
+				</a>
+                		<button class ="btn btn-success">edit</button>
+                        	<button class ="btn btn-danger">delete</button>
                         </div>
                     `;
 
@@ -107,9 +167,10 @@ Home page
 
 					element.innerHTML += `
                         <div class="card">
-                            <p class="title">${room.title}</p>
-                            <small>${room.description}</small>
-                            <button class="btn btn-primary">See Chat</button>
+                        	<p class="title">${room.title}</p>
+				<a href=${url_room}>
+                        		<button class="btn btn-primary">See Chat</button>
+				</a>
                         </div>
                     `;
 				}

@@ -18,8 +18,8 @@ sign Page
 		const message = document.getElementById("message");
 		const name = document.querySelector('input[name="name"]').value;
 		const password = document.querySelector('input[name="password"]').value;
-		const csrfToken = getCookie("csrftoken");
 
+		const csrfToken = getCookie("csrftoken");
 
 		try {
 			const response = await fetch("{% url 'signupApi' %}", {

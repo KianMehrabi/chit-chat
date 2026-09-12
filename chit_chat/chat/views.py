@@ -20,3 +20,5 @@ def login_page(request):
         return HttpResponse(status=403)
     return render(request , "chat/login.html")
 
+def room_detail_page(request, pk):
+    return render(request , "chat/room.html")

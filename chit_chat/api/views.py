@@ -13,18 +13,27 @@ from .serializer import (
 
 
 class RoomViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
     serializer_class = RoomSerializer
     def get_queryset(self):
         user = self.request.user
         return user.room_set.all()
 
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        print(f"\n \n {instance} \n \n")
+        data = request.data
 
-
+        if data['join']:
+            Membership.objects.create(user = request.user , room = instance)
+            return Response({"message":"was successful"} , status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class SignupApi(APIView):
-    permission_classes = [AllowAny]
 
+    permission_classes = [AllowAny]
     def post(self , request):
         data = request.data
         try:
