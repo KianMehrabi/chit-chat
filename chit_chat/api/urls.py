@@ -21,7 +21,7 @@ router.register(r"memberships", MembershipViewSet , basename="membership")
 urlpatterns = [
 
     path("login/" , LoginApi.as_view() , name = "loginApi"),
-    path("room_join/<int:pk>/" , RoomJoinApi.as_view() , name = "roomJoinApi"),
+    path("room_join/<str:pk>/" , RoomJoinApi.as_view() , name = "roomJoinApi"),
     path("signup/" , SignupApi.as_view() , name = "signupApi"),
     path("logout/" , LogoutApi.as_view() , name = "logoutApi"),
     path("", include(router.urls)),

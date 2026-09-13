@@ -22,25 +22,6 @@ class RoomViewSetTest(TestCase):
         )
         self.client.force_authenticate(user=self.user)
 
-    def test_user_can_join_room(self):
-        response = self.client.post(
-            f"/api/room_join/{self.room.code}/",
-            {"join": True},
-            format="json"
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["message"], "user was added")
-
-    def test_user_can_un_join_room(self):
-
-        response = self.client.post(
-            f"/api/room_join/{self.room.code}/",
-            {"join": False},
-            format="json"
-        )
-        self.assertEqual(response.data["message"], "user was deleted")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_joining_makes_membership(self):
         response = self.client.post(
@@ -60,3 +41,28 @@ class RoomViewSetTest(TestCase):
 
         membership = Membership.objects.filter(user = self.user , room = self.room)
         self.assertFalse(membership.exists())
+
+    def test_membership_existed_before_creating(self):
+        Membership.objects.create(user = self.user , room = self.room)
+
+        response = self.client.post(
+            f"/api/room_join/{self.room.code}/",
+            {"join": True},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code , 400)
+
+    # this will never happend because the url will be invalid and django gives a 404 by itself
+    # django 404 give a html response but drf reponse( in here mine) will give json so be cureful in the frontend
+
+    # i kept this one because it isnt a bad practice to have edge cases
+    def test_invalid_room_tags(self):
+        response = self.client.post(
+            f"/api/room_join/BS/",
+            {"join": True},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code , 404)
+

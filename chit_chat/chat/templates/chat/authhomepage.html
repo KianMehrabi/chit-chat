@@ -18,7 +18,7 @@ Home page
 	<div class="card">
 		<p class="title">Create Room</p>
 
-		<form onsubmit="roomJoin()">
+		<form>
 			<div class="field">
 				<label>Title</label>
 				<input name="title" type="text" placeholder="Your title">
@@ -38,11 +38,12 @@ Home page
 		<p class="title">Join Room</p>
 
 		<div class="field">
-			<form>
+			<form id="joinForm">
 
 				<label>Tag</label>
-				<input name="tag" type="text" placeholder="enter room tag">
-				<button class="btn btn-primary" style="margin:10px">Submit</button>
+				<input name="tag" type="text" placeholder="enter room tag" id="tag">
+				<div id="join"></div>
+				<button class="btn btn-primary" type="submit" style="margin:10px">Submit</button>
 			</form>
 		</div>
 
@@ -55,6 +56,7 @@ Home page
 
 
 <script>
+
 	// gets csrf token
 	function getCookie(name) {
 		const value = `; ${document.cookie}`;
@@ -70,19 +72,45 @@ Home page
 		// this a trick to make use dynamic DTS but with js So i shouldnt change every varialbe in production code 
 		// if you want to cut the code to a frontend framework or .js file you should be alerted that this code is not 
 		// going to get compiled.
-		let url = "{% url 'room-detail' pk=1001 %}"
-		url = url.replace(1001, room_code)
-		const response = await fetch(url, {
-			method: "PATCH",
-			headers: {
-				"Content-Type": "application/json",
-				"X-CSRFToken": csrfToken
-			},
-			body: JSON.stringify({
-				"join": true,
-				"room_code": room_code
-			})
-		});
+		let url = "{% url 'roomJoinApi' pk=1001 %}"
+		url = url.replace(1001, `${room_code}`)
+
+
+
+		try {
+			const response = await fetch(url, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"X-CSRFToken": csrfToken
+				},
+				body: JSON.stringify({
+					"join": true,
+				})
+			});
+
+
+			if (!response.ok) {
+				const message = document.getElementById("join");
+				const data = await response.json()
+				message.innerHTML =
+					`<span class='badge badge-danger badge-shake'> ${data.error} </span>`;
+			} else {
+
+				const message = document.getElementById("join");
+				message.innerHTML =
+					`<span class='badge badge-success badge-shake'> ${data.error} </span>`;
+			}
+		} catch (error) {
+		}
+
+		// this is like a update room you can make method or better do a class but i like this, its simple.
+
+		const element = document.getElementById("hello");
+		element.innerHTML = ""
+		getRoom()
+
+
 	}
 
 
@@ -135,7 +163,6 @@ Home page
 			const response = await fetch(url);
 			const data = await response.json();
 
-			console.log(data);
 
 			if (!response.ok) {
 				console.log(data.error);
@@ -147,7 +174,7 @@ Home page
 				// Get this user's membership for this room
 				const m_data = await getMemberDetail(room.id);
 
-				let url_room = `{% url 'roomJoinApi' pk=1001 %}`
+				let url_room = `{% url 'room-detail-page' pk=1001 %}`
 				url_room = url_room.replace(1001, room.code)
 				if (m_data && m_data.is_admin) {
 
@@ -180,6 +207,15 @@ Home page
 		}
 	}
 
+	document.getElementById("joinForm").addEventListener("submit", function (event) {
+		event.preventDefault();
+
+		const text = document.getElementById("tag").value;
+		roomJoin(text)
+		const element = document.getElementById("hello");
+
+
+	});
 
 	getRoom();
 </script>

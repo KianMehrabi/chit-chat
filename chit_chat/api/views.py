@@ -23,14 +23,23 @@ class RoomJoinApi(APIView):
     permission_classes = [IsAuthenticated]
     def post(self , request , pk):
         data = request.data
-        room = Room.objects.filter(code = pk).first()
+        room = Room.objects.filter(code = str(pk))
+
+        if not room.exists():
+            return Response({"error":"invalid room tag"}, status=status.HTTP_404_NOT_FOUND)
+
+
+        membership = Membership.objects.filter(user = self.request.user , room__code = pk)
+
+        if membership.exists():
+            return Response({"error":"there exists a joined room"} , status=status.HTTP_400_BAD_REQUEST)
 
         if data['join']:
-            Membership.objects.create(user = self.request.user , room = room)
-            return Response({"message":"user was added"} , status=status.HTTP_200_OK)
+            Membership.objects.create(user = self.request.user , room = room.first())
+            return Response(status=status.HTTP_200_OK)
         else:
-            Membership.objects.filter(user = self.request.user , room__code = pk).delete()
-            return Response({"message":"user was deleted"} , status=status.HTTP_200_OK)
+            membership.delete()
+            return Response(status=status.HTTP_200_OK)
 
 class SignupApi(APIView):
 
