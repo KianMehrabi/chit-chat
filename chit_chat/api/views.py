@@ -12,16 +12,7 @@ from .serializer import (
 )
 
 
-class RoomViewSet(viewsets.ModelViewSet):
-    serializer_class = RoomSerializer
-    def get_queryset(self):
-        user = self.request.user
-        return user.room_set.all()
-
-
-
-
-
+# Auth
 class SignupApi(APIView):
     permission_classes = [AllowAny]
 
@@ -33,8 +24,6 @@ class SignupApi(APIView):
             return Response({"error":"problem in creating users"} , status=status.HTTP_400_BAD_REQUEST)
         login(request , user)
         return Response(status=status.HTTP_200_OK)
-
-
 
 class LogoutApi(APIView):
     permission_classes = [IsAuthenticated]
@@ -57,18 +46,4 @@ class LoginApi(APIView):
             return Response(status=status.HTTP_200_OK)
         else:
             return Response({"error":"the password is not right"} , status=status.HTTP_406_NOT_ACCEPTABLE)
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class MembershipViewSet(viewsets.ModelViewSet):
-    serializer_class = MembershipSerializer
-    lookup_field = "room"
-
-    def get_queryset(self):
-        user = self.request.user
-        return user.membership_set.all()
 
