@@ -3,19 +3,15 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (
     LogoutApi,
-    MembershipViewSet,
-    RoomViewSet,
     SignupApi,
-    UserViewSet,
     LoginApi,
+    UserViewSet,
 )
 
 router = DefaultRouter()
 
 
-router.register(r"rooms", RoomViewSet  ,basename = "room")
 router.register(r"users", UserViewSet , basename="user")
-router.register(r"memberships", MembershipViewSet , basename="membership")
 
 urlpatterns = [
     path("login/" , LoginApi.as_view() , name = "loginApi"),

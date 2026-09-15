@@ -6,8 +6,6 @@ from rest_framework.views import APIView, Response, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from chat.models import Membership, Room  
 from .serializer import (
-    MembershipSerializer,
-    RoomSerializer,
     UserSerializer,
 )
 
@@ -36,14 +34,26 @@ class LoginApi(APIView):
     permission_classes = [AllowAny]
     def post(self , request):
         data = request.data
-        user = User.objects.filter(username = data['name']).first()
+        user = User.objects.filter(username = data['name'])
+        command = len(user)
 
-        if user is None :
-            return Response({"error":"user was not found" } ,status =status.HTTP_404_NOT_FOUND)
+        match command:
+            case 1:
+                user = user.first()
+                if user.check_password(data['password']):
+                    login(request , user)
+                    return Response(status=status.HTTP_200_OK)
+                else:
+                    return Response({"error":"the password is not right"} , status=status.HTTP_406_NOT_ACCEPTABLE)
+            case 0:
+                return Response({"error":"user was not found" } ,status =status.HTTP_404_NOT_FOUND)
+            case _:
+                return Response({"error":"there is problems with this user"} , status=status.HTTP_300_MULTIPLE_CHOICES)
 
-        if user.check_password(data['password']):
-            login(request , user)
-            return Response(status=status.HTTP_200_OK)
-        else:
-            return Response({"error":"the password is not right"} , status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 

@@ -19,33 +19,10 @@ Home page
 		<p class="title">Logout</p>
 		<button onclick="requestLogOut()" class="btn btn-primary">Click</button>
 	</div>
-
-	<div id="hello">
-
-	</div>
-
 </div>
 
 
 <script>
-	async function getMemberDetail(id) {
-		try {
-			let url = "{% url 'membership-detail' room=2002 %}";
-			url = url.replace("2002", id);
-
-			const response = await fetch(url);
-
-			if (response.ok) {
-				const data = await response.json();
-				return data;
-			}
-
-		} catch (error) {
-			console.error(error.message);
-		}
-	}
-
-
 	async function requestLogOut() {
 		try {
 			const response = await fetch("{% url 'logoutApi' %}");
@@ -67,60 +44,5 @@ Home page
 			console.error(error.message);
 		}
 	}
-
-
-	async function getRoom() {
-		const url = "{% url 'room-list' %}";
-		const element = document.getElementById("hello");
-
-		try {
-			const response = await fetch(url);
-			const data = await response.json();
-
-			console.log(data);
-
-			if (!response.ok) {
-				console.log(data.error);
-				return;
-			}
-
-			for (const room of data) {
-
-				// Get this user's membership for this room
-				const m_data = await getMemberDetail(room.id);
-
-				console.log(m_data);
-
-				if (m_data && m_data.is_admin) {
-
-					element.innerHTML += `
-                        <div class="card">
-                            <p class="title">${room.title}</p>
-                            <small>${room.description}</small>
-                            <button class="btn btn-primary">See Chat</button>
-                            <button class ="btn btn-success">edit</button>
-                            <button class ="btn btn-danger">delete</button>
-                        </div>
-                    `;
-
-				} else {
-
-					element.innerHTML += `
-                        <div class="card">
-                            <p class="title">${room.title}</p>
-                            <small>${room.description}</small>
-                            <button class="btn btn-primary">See Chat</button>
-                        </div>
-                    `;
-				}
-			}
-
-		} catch (error) {
-			console.error(error.message);
-		}
-	}
-
-
-	getRoom();
 </script>
 {% endblock %}
