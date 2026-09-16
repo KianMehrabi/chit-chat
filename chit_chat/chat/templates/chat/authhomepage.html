@@ -16,10 +16,22 @@ Home page
 	<div class="card">
 		<p class="title">Join Room</p>
 		<div class="field">
-			<label>Tags</label>
-			<input name="name" type="text" placeholder="Your Room Tag">
+			<form method="POST">
+				{% csrf_token %}
+				<div class="field">
+					<label for="{{ form.code.id_for_label }}">Code</label>
+					{{ form.code }}
+				</div>
+				<button class="btn btn-primary">Click</button>
+				{% if messages %}
+				{% for message in messages %}
+				<div class="error-text">{{ message }}</div>
+				{% endfor %}
+				{% endif %}
+			</form>
 		</div>
 	</div>
+
 	<div class="card">
 		<div id="message">
 		</div>

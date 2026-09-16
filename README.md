@@ -4,10 +4,12 @@
 [x] Deleting rooms
 [x] Creating rooms
 
-[ ] Joining rooms ( with error handling system )
-[ ] quiting rooms
+[x] Joining rooms ( with error handling system )
+[x] quiting rooms
 
-[ ]
+[ ] Contact me page with Emain integeration
+
+[ ] Creating tests for forms in authhompage.html
 
 ## Better 
 

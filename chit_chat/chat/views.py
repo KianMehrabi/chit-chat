@@ -1,22 +1,58 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.views import login_required
-from django.http import HttpResponse
+from django.contrib import messages
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import View
 from rest_framework import status
 from rest_framework.views import Response
 from chat.models import Membership , Room
-from chat.form import RoomForm
+from chat.form import CodeForm, RoomForm
 
-def home_page(request):
-    if not request.user.is_authenticated:
-        return render(request , "chat/homepage.html")
-    else:
-        user = request.user
-        memberships = user.membership_set.all()
-        context = {
-            "memberships":memberships,
-        }
-        return render(request , "chat/authhomepage.html" , context)
+# i want a CBV because i can check if a method is POST or GET and not
+# use if.
+# i used CBV and clean_form logic. you can also do this with normal Api(with drf) or dont even error handle
+class HomePage(View):
+    def get(self , request):
+        if not request.user.is_authenticated:
+            return render(request , "chat/homepage.html")
+        else:
+            user = request.user
+            memberships = user.membership_set.all()
+            form = CodeForm()
+            context = {
+                "memberships":memberships,
+                "form":form,
+            }
+            return render(request , "chat/authhomepage.html" , context)
+
+    # the only form in my code is from CodeForm()
+    def post(self, request):
+        if request.user.is_authenticated:
+            form = CodeForm(request.POST)
+            user = request.user
+
+            # this is where the logic of the code is checked so that the 
+            # code is not joined before. check out room
+            if form.is_valid():
+
+                code = form.cleaned_data["code"]
+                room = Room.objects.get(code = code)
+                membership = Membership.objects.filter(user=user , room=room)
+                if membership.exists():
+                    messages.error(request , "You have that room already")
+                    return redirect("homepage")
+                else:
+                    Membership.objects.create(user=user , room=room)
+                    return redirect("homepage")
+            else:
+                    messages.error(request , form.errors["code"][0])
+                    return redirect("homepage")
+        else:
+            return  HttpResponseBadRequest()
+
+
+
 
 @login_required
 def room_page(request , pk):

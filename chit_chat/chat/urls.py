@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home_page , login_page, room_page , sign_page , delete_room , create_room , update_room
+from .views import HomePage, login_page, room_page , sign_page , delete_room , create_room , update_room
 
 urlpatterns = [
     path("login/" , login_page,  name="login"),
@@ -7,6 +7,6 @@ urlpatterns = [
     path("room/update/<str:pk>/" , update_room , name="updateRoom"),
     path("room/create/" , create_room , name="createRoom"),
     path("room/<str:pk>/" , room_page,  name="room"),
-    path("" , home_page,  name="homepage"),
+    path("" , HomePage.as_view() ,  name="homepage"),
     path("signup/" , sign_page,  name="signup"),
 ]
