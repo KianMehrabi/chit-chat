@@ -14,38 +14,58 @@ Home page
 	</div>
 
 	<div class="card">
+		<p class="title">Join Room</p>
+		<div class="field">
+			<label>Tags</label>
+			<input name="name" type="text" placeholder="Your Room Tag">
+		</div>
+	</div>
+	<div class="card">
 		<div id="message">
 		</div>
 		<p class="title">Logout</p>
 		<button onclick="requestLogOut()" class="btn btn-primary">Click</button>
 	</div>
 
-	<div id="hello">
+	<div class="card">
+		<p class="title">Create Room</p>
 
+		<a href="{% url 'createRoom' %}">
+			<button class="btn btn-primary">Click</button>
+		</a>
 	</div>
 
+	{% for membership in memberships %}
+	{% with room=membership.room %}
+	<div class="card">
+		<h2 class="title">{{ room.title }}</h2>
+		<h5> {{ room.description|truncatewords:20 }} </h5>
+
+		<a href="{% url 'room' pk=room.code %}">
+			<button class="btn btn-primary">Click</button>
+		</a>
+		{% if membership.is_admin %}
+		<a href="{% url 'updateRoom' pk=room.code %}">
+			<button class="btn btn-success">edit</button>
+		</a>
+		<a href="{% url 'deleteRoom' pk=room.code %}">
+			<button class="btn btn-danger">delete</button>
+		</a>
+
+		{% else %}
+
+		<button onclick="joinRoom('{{ room.code }}')" class="btn btn-danger">quit</button>
+		<div id="quit"></div>
+
+		{% endif %}
+	</div>
+
+	{% endwith %}
+	{% endfor %}
 </div>
 
 
 <script>
-	async function getMemberDetail(id) {
-		try {
-			let url = "{% url 'membership-detail' room=2002 %}";
-			url = url.replace("2002", id);
-
-			const response = await fetch(url);
-
-			if (response.ok) {
-				const data = await response.json();
-				return data;
-			}
-
-		} catch (error) {
-			console.error(error.message);
-		}
-	}
-
-
 	async function requestLogOut() {
 		try {
 			const response = await fetch("{% url 'logoutApi' %}");
@@ -68,59 +88,27 @@ Home page
 		}
 	}
 
-
-	async function getRoom() {
-		const url = "{% url 'room-list' %}";
-		const element = document.getElementById("hello");
-
+	async function joinRoom(room_code) {
 		try {
-			const response = await fetch(url);
-			const data = await response.json();
+			let url = "{% url 'roomQuitApi' pk=1001 %}";
+			url = url.replace(1001, room_code);
+			fetch(url)
+				.then(response => {
 
-			console.log(data);
+					const message = document.getElementById("quit");
 
-			if (!response.ok) {
-				console.log(data.error);
-				return;
-			}
+					message.innerHTML =
+						"<span class='badge badge-success badge-shake'>success</span>";
 
-			for (const room of data) {
 
-				// Get this user's membership for this room
-				const m_data = await getMemberDetail(room.id);
-
-				console.log(m_data);
-
-				if (m_data && m_data.is_admin) {
-
-					element.innerHTML += `
-                        <div class="card">
-                            <p class="title">${room.title}</p>
-                            <small>${room.description}</small>
-                            <button class="btn btn-primary">See Chat</button>
-                            <button class ="btn btn-success">edit</button>
-                            <button class ="btn btn-danger">delete</button>
-                        </div>
-                    `;
-
-				} else {
-
-					element.innerHTML += `
-                        <div class="card">
-                            <p class="title">${room.title}</p>
-                            <small>${room.description}</small>
-                            <button class="btn btn-primary">See Chat</button>
-                        </div>
-                    `;
-				}
-			}
-
+					setTimeout(() => {
+						window.location.href = "{% url 'homepage' %}";
+					}, 1000);
+				});
 		} catch (error) {
 			console.error(error.message);
 		}
 	}
 
-
-	getRoom();
 </script>
 {% endblock %}

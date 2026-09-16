@@ -9,15 +9,5 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id" , "username" , "password"]
 
 
-class MembershipSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Membership
-        fields = "__all__"
 
-
-class RoomSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Room
-        fields = ['id' , 'title' , 'description']
 

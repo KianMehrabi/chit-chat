@@ -6,22 +6,11 @@ from rest_framework.views import APIView, Response, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from chat.models import Membership, Room  
 from .serializer import (
-    MembershipSerializer,
-    RoomSerializer,
     UserSerializer,
 )
 
 
-class RoomViewSet(viewsets.ModelViewSet):
-    serializer_class = RoomSerializer
-    def get_queryset(self):
-        user = self.request.user
-        return user.room_set.all()
-
-
-
-
-
+# Auth
 class SignupApi(APIView):
     permission_classes = [AllowAny]
 
@@ -34,8 +23,6 @@ class SignupApi(APIView):
         login(request , user)
         return Response(status=status.HTTP_200_OK)
 
-
-
 class LogoutApi(APIView):
     permission_classes = [IsAuthenticated]
     def get(self , request):
@@ -47,28 +34,47 @@ class LoginApi(APIView):
     permission_classes = [AllowAny]
     def post(self , request):
         data = request.data
-        user = User.objects.filter(username = data['name']).first()
+        user = User.objects.filter(username = data['name'])
+        command = len(user)
 
-        if user is None :
-            return Response({"error":"user was not found" } ,status =status.HTTP_404_NOT_FOUND)
-
-        if user.check_password(data['password']):
-            login(request , user)
-            return Response(status=status.HTTP_200_OK)
-        else:
-            return Response({"error":"the password is not right"} , status=status.HTTP_406_NOT_ACCEPTABLE)
-
+        match command:
+            case 1:
+                user = user.first()
+                if user.check_password(data['password']):
+                    login(request , user)
+                    return Response(status=status.HTTP_200_OK)
+                else:
+                    return Response({"error":"the password is not right"} , status=status.HTTP_406_NOT_ACCEPTABLE)
+            case 0:
+                return Response({"error":"user was not found" } ,status =status.HTTP_404_NOT_FOUND)
+            case _:
+                return Response({"error":"there is problems with this user"} , status=status.HTTP_300_MULTIPLE_CHOICES)
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+class QuitRoomApi(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self , request , *args , **kwargs):
+        pk = kwargs["pk"]
+        user = request.user
 
-class MembershipViewSet(viewsets.ModelViewSet):
-    serializer_class = MembershipSerializer
-    lookup_field = "room"
+        room = Room.objects.filter(code = pk)
+        if room.exists():
+            room = room.first()
+            membership = Membership.objects.filter(room = room, user = user)
 
-    def get_queryset(self):
-        user = self.request.user
-        return user.membership_set.all()
+            if membership.exists():
+                membership = membership.first()
+                membership.delete()
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response({"error":"not the real user sending data"} , status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error":"the room does not exists"} , status=status.HTTP_404_NOT_FOUND)
+
+
+
+
 

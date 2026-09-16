@@ -136,6 +136,9 @@
   }
  
   /* ---------- Table ---------- */
+  h5{
+	  margin-bottom: 10px
+  }
  
   table {
     width: 100%;

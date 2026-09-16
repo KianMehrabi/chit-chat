@@ -3,23 +3,21 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (
     LogoutApi,
-    MembershipViewSet,
-    RoomViewSet,
     SignupApi,
-    UserViewSet,
     LoginApi,
+    UserViewSet,
+    QuitRoomApi
 )
 
 router = DefaultRouter()
 
 
-router.register(r"rooms", RoomViewSet  ,basename = "room")
 router.register(r"users", UserViewSet , basename="user")
-router.register(r"memberships", MembershipViewSet , basename="membership")
 
 urlpatterns = [
     path("login/" , LoginApi.as_view() , name = "loginApi"),
     path("signup/" , SignupApi.as_view() , name = "signupApi"),
+    path("room/quit/<str:pk>/" , QuitRoomApi.as_view() , name= "roomQuitApi"),
     path("logout/" , LogoutApi.as_view() , name = "logoutApi"),
     path("", include(router.urls)),
 ]
