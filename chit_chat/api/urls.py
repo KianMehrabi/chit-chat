@@ -6,6 +6,7 @@ from .views import (
     SignupApi,
     LoginApi,
     UserViewSet,
+    QuitRoomApi
 )
 
 router = DefaultRouter()
@@ -16,6 +17,7 @@ router.register(r"users", UserViewSet , basename="user")
 urlpatterns = [
     path("login/" , LoginApi.as_view() , name = "loginApi"),
     path("signup/" , SignupApi.as_view() , name = "signupApi"),
+    path("room/quit/<str:pk>/" , QuitRoomApi.as_view() , name= "roomQuitApi"),
     path("logout/" , LogoutApi.as_view() , name = "logoutApi"),
     path("", include(router.urls)),
 ]

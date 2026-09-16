@@ -14,11 +14,54 @@ Home page
 	</div>
 
 	<div class="card">
+		<p class="title">Join Room</p>
+		<div class="field">
+			<label>Tags</label>
+			<input name="name" type="text" placeholder="Your Room Tag">
+		</div>
+	</div>
+	<div class="card">
 		<div id="message">
 		</div>
 		<p class="title">Logout</p>
 		<button onclick="requestLogOut()" class="btn btn-primary">Click</button>
 	</div>
+
+	<div class="card">
+		<p class="title">Create Room</p>
+
+		<a href="{% url 'createRoom' %}">
+			<button class="btn btn-primary">Click</button>
+		</a>
+	</div>
+
+	{% for membership in memberships %}
+	{% with room=membership.room %}
+	<div class="card">
+		<h2 class="title">{{ room.title }}</h2>
+		<h5> {{ room.description|truncatewords:20 }} </h5>
+
+		<a href="{% url 'room' pk=room.code %}">
+			<button class="btn btn-primary">Click</button>
+		</a>
+		{% if membership.is_admin %}
+		<a href="{% url 'updateRoom' pk=room.code %}">
+			<button class="btn btn-success">edit</button>
+		</a>
+		<a href="{% url 'deleteRoom' pk=room.code %}">
+			<button class="btn btn-danger">delete</button>
+		</a>
+
+		{% else %}
+
+		<button onclick="joinRoom('{{ room.code }}')" class="btn btn-danger">quit</button>
+		<div id="quit"></div>
+
+		{% endif %}
+	</div>
+
+	{% endwith %}
+	{% endfor %}
 </div>
 
 
@@ -44,5 +87,28 @@ Home page
 			console.error(error.message);
 		}
 	}
+
+	async function joinRoom(room_code) {
+		try {
+			let url = "{% url 'roomQuitApi' pk=1001 %}";
+			url = url.replace(1001, room_code);
+			fetch(url)
+				.then(response => {
+
+					const message = document.getElementById("quit");
+
+					message.innerHTML =
+						"<span class='badge badge-success badge-shake'>success</span>";
+
+
+					setTimeout(() => {
+						window.location.href = "{% url 'homepage' %}";
+					}, 1000);
+				});
+		} catch (error) {
+			console.error(error.message);
+		}
+	}
+
 </script>
 {% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'chat/base.html' %}
+
+{% block title %}
+{{ room.title }}
+{% endblock%}
+{% block main %}
+<div class="container">
+	<div class="card">
+		<p class="title">{{ room.title }}
+			<scan class="badge badge-success">{{ room.code }}</scan>
+		</p>
+	</div>
+	<div class="card">
+		{{ room.description }}
+	</div>
+</div>
+{% endblock %}

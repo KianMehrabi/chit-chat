@@ -50,10 +50,31 @@ class LoginApi(APIView):
             case _:
                 return Response({"error":"there is problems with this user"} , status=status.HTTP_300_MULTIPLE_CHOICES)
 
-
-
-
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+class QuitRoomApi(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self , request , *args , **kwargs):
+        pk = kwargs["pk"]
+        user = request.user
+
+        room = Room.objects.filter(code = pk)
+        if room.exists():
+            room = room.first()
+            membership = Membership.objects.filter(room = room, user = user)
+
+            if membership.exists():
+                membership = membership.first()
+                membership.delete()
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response({"error":"not the real user sending data"} , status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error":"the room does not exists"} , status=status.HTTP_404_NOT_FOUND)
+
+
+
+
 

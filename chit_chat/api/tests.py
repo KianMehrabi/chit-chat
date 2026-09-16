@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
 from rest_framework import status
 
+from chat.models import Membership , Room
+
 class AuthTests(APITestCase):
 
     def setUp(self):
@@ -68,3 +70,37 @@ class AuthTests(APITestCase):
             "password": "password123"
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class RoomTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username = "testuser",
+            password = "password123"
+        )
+        self.room = Room.objects.create(
+            title = "test chat", 
+            description = "this is test description",
+        )
+        self.client.force_authenticate(user = self.user)
+
+    def test_invalid_url_response(self):
+        membership = Membership.objects.create(user = self.user , room = self.room)
+        response = self.client.get("/api/room/quit/ThisIsNotRealCode/")
+
+        self.assertEqual(response.status_code , status.HTTP_404_NOT_FOUND)
+    # joining is measured with existens of membership model instance.
+    def test_user_without_not_joined(self):
+        # no membership
+        response = self.client.get(f"/api/room/quit/{self.room.code}/")
+        self.assertEqual(response.status_code , status.HTTP_400_BAD_REQUEST)
+
+    def test_user_is_joined_if_the_membership_is_deleted(self):
+        
+        membership = Membership.objects.create(user = self.user , room = self.room)
+        response = self.client.get(f"/api/room/quit/{self.room.code}/")
+
+        self.assertEqual(response.status_code , status.HTTP_200_OK)
+        self.assertFalse(
+            Membership.objects.filter(room = self.room , user= self.user).exists()
+        )
